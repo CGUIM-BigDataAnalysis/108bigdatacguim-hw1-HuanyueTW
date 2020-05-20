@@ -3,58 +3,55 @@ install.packages("dplyr")
 
 library(jsonlite)
 library(dplyr)
-knitr::kable
-career107 <- fromJSON("107¦~¦U±Ğ¨|µ{«×§Oªì¥ô¤H­û¨C¤H¨C¤ë¸g±`©ÊÁ~¸ê¢w«ö¤jÂ¾Ãş¤À.json")
+
+career107 <- fromJSON("107å¹´å„æ•™è‚²ç¨‹åº¦åˆ¥åˆä»»äººå“¡æ¯äººæ¯æœˆç¶“å¸¸æ€§è–ªè³‡â”€æŒ‰å¤§è·é¡åˆ†.json")
 career104 <- fromJSON("http://ipgod.nchc.org.tw/dataset/b6f36b72-0c4a-4b60-9254-1904e180ddb1/resource/63ecb4a9-f634-45f4-8b38-684b72cf95ba/download/0df38b73f75962d5468a11942578cce5.json")
 
-View(data.frame(career104[,"¤jÂ¾·~§O"],career107[,"¤jÂ¾·~§O"]) ) #§PÂ_¨â¦~ªº®t²§
-career104$¤jÂ¾·~§O <- career107$¤jÂ¾·~§O #²Î¤@Â¾·~¦WºÙ
+View(data.frame(career104[,"å¤§è·æ¥­åˆ¥"],career107[,"å¤§è·æ¥­åˆ¥"]) ) #åˆ¤æ–·å…©å¹´çš„å·®ç•°
+career104$å¤§è·æ¥­åˆ¥ <- career107$å¤§è·æ¥­åˆ¥ #çµ±ä¸€è·æ¥­åç¨±
 
-career_join<-inner_join(career104,career107,by = "¤jÂ¾·~§O")
-for (n in grep("¡K|¡X",career_join)){
-  career_join[grep("¡K|¡X", career_join[,n]),n] <- ""
-} #²M°£©Ò¦³¦bÁ~¸êÄæ¦ìªº¯S®í¦r¤¸
-career_join[3:27]<-as.data.frame(lapply(career_join[3:27],as.numeric)) #Âà´«¦¨¼Æ­È¤è«K«áÄò¨Ï¥Î
+career_join<-inner_join(career104 ,career107,by = "å¤§è·æ¥­åˆ¥")
+for (n in grep("â€¦|â€”",career_join)){
+  career_join[grep("â€¦|â€”", career_join[,n]),n] <- ""
+} #æ¸…é™¤æ‰€æœ‰åœ¨è–ªè³‡æ¬„ä½çš„ç‰¹æ®Šå­—å…ƒ
+career_join[3:27]<-as.data.frame(lapply(career_join[3:27],as.numeric)) #è½‰æ›æˆæ•¸å€¼æ–¹ä¾¿å¾ŒçºŒä½¿ç”¨
 
 
 #Q1
-career_join$´£°ª¤ñ²v <-  career_join$`¸g±`©ÊÁ~¸ê-Á~¸ê.y` / career_join$`¸g±`©ÊÁ~¸ê-Á~¸ê.x`
-
-Q1_1_answer <- filter(career_join, `¸g±`©ÊÁ~¸ê-Á~¸ê.y`>`¸g±`©ÊÁ~¸ê-Á~¸ê.x`) %>% 
-  arrange(desc(´£°ª¤ñ²v)) %>%
+career_join$æé«˜æ¯”ç‡ <-  career_join$`ç¶“å¸¸æ€§è–ªè³‡-è–ªè³‡.y` / career_join$`ç¶“å¸¸æ€§è–ªè³‡-è–ªè³‡.x`
+Q1_1_answer <- filter(career_join, `ç¶“å¸¸æ€§è–ªè³‡-è–ªè³‡.y`>`ç¶“å¸¸æ€§è–ªè³‡-è–ªè³‡.x`) %>% 
+  arrange(desc(æé«˜æ¯”ç‡)) %>%
   head(10)
 
-Q1_2_answer <- filter(career_join, ´£°ª¤ñ²v>1.05)
-index <- regexpr("-", paste0(Q1_2_answer$¤jÂ¾·~§O, "-"))
-Q1_3_answer <-substr(Q1_2_answer$¤jÂ¾·~§O, 0, index-1 ) 
+Q1_2_answer <- filter(career_join, æé«˜æ¯”ç‡>1.05)
+index <- regexpr("-", paste0(Q1_2_answer$å¤§è·æ¥­åˆ¥, "-"))
+Q1_3_answer <-substr(Q1_2_answer$å¤§è·æ¥­åˆ¥, 0, index-1 ) 
 table(Q1_3_answer)
 
 
 #Q2
-Q2_1_104 <- filter(career_join, `¤j¾Ç-¤k/¨k.x` < 100) %>%
-  arrange(desc(`¤j¾Ç-¤k/¨k.x`)) %>%
+Q2_1_104 <-career_join %>% arrange(`å¤§å­¸-å¥³/ç”·.x`) %>%
   head(10) %>%
   select(1:14)
-Q2_1_107 <- filter(career_join, `¤j¾Ç-¤k/¨k.y` < 100) %>%
-  arrange(desc(`¤j¾Ç-¤k/¨k.x`)) %>%
+Q2_1_107 <-career_join %>% arrange(`å¤§å­¸-å¥³/ç”·.y`) %>%
   head(10) %>%
   select(-1,-(3:14),-28)
 
-Q2_2_104 <- filter(career_join, `¤j¾Ç-¤k/¨k.x` > 100) %>%
-  arrange(desc(`¤j¾Ç-¤k/¨k.x`)) %>%
-  select(1:14)
-Q2_2_107 <- filter(career_join, `¤j¾Ç-¤k/¨k.x` > 100) %>%
-  arrange(desc(`¤j¾Ç-¤k/¨k.x`)) %>%
-  select(-1,-(3:14),-28)
+Q2_2_104 <-career_join %>% arrange(desc(`å¤§å­¸-å¥³/ç”·.x`)) %>%
+  select(1:14) %>%
+  head(10)
+Q2_2_107 <-career_join %>% arrange(desc(`å¤§å­¸-å¥³/ç”·.y`)) %>%
+  select(-1,-(3:14),-28) %>%
+  head(10)
 
 #Q3
-HighCP107 <- select(career_join, -1,-(3:14),-28)
-HighCP107$ºÓ¤hÁ~¸ê¼W¥[¤ñ²v <- HighCP107$`¬ã¨s©Ò-Á~¸ê` / HighCP107$`¤j¾Ç-Á~¸ê.y` 
-Q3_answer <- HighCP107 %>% arrange(desc(ºÓ¤hÁ~¸ê¼W¥[¤ñ²v)) %>% 
+clean_career107 <- select(career_join, -1,-(3:14),-28)
+clean_career107$ç¢©å£«è–ªè³‡å¢åŠ æ¯”ç‡ <- clean_career107$`ç ”ç©¶æ‰€-è–ªè³‡` / clean_career107$`å¤§å­¸-è–ªè³‡.y` 
+MasterHighCP107 <- clean_career107 %>% arrange(desc(ç¢©å£«è–ªè³‡å¢åŠ æ¯”ç‡)) %>% 
   head(10)
 
 #Q4
 My_choices <- career_join[c(114, 100, 86, 79),c(2,11,13,24,26,28)] 
-My_choices$ºÓ¤h107CP­È <- My_choices$`¬ã¨s©Ò-Á~¸ê` / My_choices$`¤j¾Ç-Á~¸ê.y` 
-names(My_choices)[2:5] <- c("104¤j¾ÇÁ~¸ê","104¬ã¨s©Ò¥H¤WÁ~¸ê","107¤j¾ÇÁ~¸ê","107¬ã¨s©Ò¥H¤WÁ~¸ê")
+My_choices$ç¢©å£«107CPå€¼ <- My_choices$`ç ”ç©¶æ‰€-è–ªè³‡` / My_choices$`å¤§å­¸-è–ªè³‡.y` 
+names(My_choices)[2:5] <- c("104å¤§å­¸è–ªè³‡","104ç ”ç©¶æ‰€ä»¥ä¸Šè–ªè³‡","107å¤§å­¸è–ªè³‡","107ç ”ç©¶æ‰€ä»¥ä¸Šè–ªè³‡")
 
