@@ -1,0 +1,13 @@
+install.packages("jsonlite")
+install.packages("dplyr")
+
+library(jsonlite)
+library(dplyr)
+
+class107 <- fromJSON("107年各職類別初任人員每人每月經常性薪資－按行業別分.json")
+career107 <- fromJSON("107年各教育程度別初任人員每人每月經常性薪資─按大職類分.json")
+
+class104 <- fromJSON("http://ipgod.nchc.org.tw/dataset/b6f36b72-0c4a-4b60-9254-1904e180ddb1/resource/eaa6dcac-27f3-43a9-bc3e-c83517513707/download/588055dcf1bf9e7238dfdbc4f45abe5b.json")
+career104 <- fromJSON("http://ipgod.nchc.org.tw/dataset/b6f36b72-0c4a-4b60-9254-1904e180ddb1/resource/63ecb4a9-f634-45f4-8b38-684b72cf95ba/download/0df38b73f75962d5468a11942578cce5.json")
+
+View(data.frame(career104[,"大職業別"],career107[,"大職業別"]) )

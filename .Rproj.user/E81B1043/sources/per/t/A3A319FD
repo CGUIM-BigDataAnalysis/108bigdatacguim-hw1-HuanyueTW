@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1589276358770.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3472613461",
+    "id" : "A3A319FD",
+    "lastKnownWriteTime" : 1589278510,
+    "last_content_update" : 1589278510098,
+    "path" : "C:/Users/brian/OneDrive/桌面/108bigdatacguim-hw1-HuanyueTW/DataAnalysis.R",
+    "project_path" : "DataAnalysis.R",
+    "properties" : {
+        "cursorPosition" : "13,0",
+        "scrollLine" : "0"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
