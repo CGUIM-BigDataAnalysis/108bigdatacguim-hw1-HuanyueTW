@@ -1,0 +1,33 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1590051416177.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "343DCACA",
+    "lastKnownWriteTime" : 1707721033664,
+    "last_content_update" : 1590051416177,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "FE25A0B9",
+        "caption" : "Male_morethan_Female_104",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=Male_morethan_Female_104&cache_key=FE25A0B9",
+        "displayedObservations" : 10,
+        "environment" : "",
+        "expression" : "Male_morethan_Female_104",
+        "object" : "Male_morethan_Female_104",
+        "preview" : 0,
+        "totalObservations" : 10,
+        "variables" : 14
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

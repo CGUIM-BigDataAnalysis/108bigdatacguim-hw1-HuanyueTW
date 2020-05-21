@@ -5,15 +5,15 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "223174779",
+    "hash" : "1344282099",
     "id" : "5A2B6B23",
-    "lastKnownWriteTime" : 1589979521,
-    "last_content_update" : 1589979521198,
+    "lastKnownWriteTime" : 1590059483,
+    "last_content_update" : 1590059483745,
     "path" : "C:/Users/brian/OneDrive/桌面/108bigdatacguim-hw1-HuanyueTW/SalaryAnalysis.Rmd",
     "project_path" : "SalaryAnalysis.Rmd",
     "properties" : {
-        "cursorPosition" : "83,10",
-        "scrollLine" : "64"
+        "cursorPosition" : "108,109",
+        "scrollLine" : "101"
     },
     "read_only" : false,
     "read_only_alternatives" : [

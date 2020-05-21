@@ -15,10 +15,9 @@ library(jsonlite)
 library(dplyr)
 career107 <- fromJSON("107年各教育程度別初任人員每人每月經常性薪資─按大職類分.json")
 career104 <- fromJSON("http://ipgod.nchc.org.tw/dataset/b6f36b72-0c4a-4b60-9254-1904e180ddb1/resource/63ecb4a9-f634-45f4-8b38-684b72cf95ba/download/0df38b73f75962d5468a11942578cce5.json")
+knitr::kable(data.frame(career104[,"大職業別"],career107[,"大職業別"]))    #判斷兩年的職業大致差異
 
-View(data.frame(career104[,"大職業別"],career107[,"大職業別"]) ) #判斷兩年的差異
-
-career104$大職業別 <- career107$大職業別 #因為職業只有名稱的變化，因此用取代來統一職業名稱
+career104$大職業別 <- career107$大職業別 #因為職業只有名稱上的變化，因此用取代來統一職業名稱
 
 career_join<-inner_join(career104,career107,by = "大職業別") #合併兩年資料
 
@@ -27,6 +26,8 @@ for (n in grep("…|—",career_join)){
 } #將所有在薪資欄位的特殊字元"…"跟"—"轉換成空字串
 
 career_join[3:27]<-as.data.frame(lapply(career_join[3:27],as.numeric)) #將資料轉換成數值方便後續使用
+
+
 ```
 
 ### 107年度薪資較104年度薪資高的職業有哪些? (前十名)
@@ -34,24 +35,25 @@ career_join[3:27]<-as.data.frame(lapply(career_join[3:27],as.numeric)) #將資�
 值得一提的是跟餐飲光觀有關的有三個入榜，也"有可能"是觀光旅遊帶動的可能，此觀點僅從這些資料推測並不完全客觀，若要嚴謹點可進一步跟物價指數以及其他消費水平做結合。另外還有三個跟基礎能源有關的入榜，這兩類職業算是提升最多的兩種職業類別。
 ```{r compare103106}
 career_join$提高比率 <-  career_join$`經常性薪資-薪資.y` / career_join$`經常性薪資-薪資.x`
-Q1_1_answer <- filter(career_join, `經常性薪資-薪資.y`>`經常性薪資-薪資.x`) %>% 
+IncreaseRate <- filter(career_join, `經常性薪資-薪資.y`>`經常性薪資-薪資.x`) %>% 
   arrange(desc(提高比率)) %>%
-  head(10) 
-  knitr::kable(Q1_1_answer)
+  select(2, 3, 16, 28)
+names(IncreaseRate)[c(2, 3)] <- c("104經常性薪資", "107經常性薪資") #整理欄位名方便檢視
+knitr::kable(head(IncreaseRate, 10))
 ```
 
 ### 提高超過5%的的職業有哪些? 
 總計84個職業提升超過5%
 ```{r over5}
-Q1_2_answer <- filter(career_join, 提高比率>1.05)
-knitr::kable(Q1_2_answer[, c(2, 28)])
+increase_over_5percent <- filter(IncreaseRate, 提高比率>1.05) #載入之前整理好欄位的資料框並做篩選
+knitr::kable(increase_over_5percent)
 ```
 
 ### 主要的職業種別是哪些種類呢?
 ```{r mainType}
-index <- regexpr("-", paste0(Q1_2_answer$大職業別, "-"))
-Q1_3_answer <-substr(Q1_2_answer$大職業別, 0, index-1 ) 
-table(Q1_3_answer)
+index <- regexpr("-", paste0(increase_over_5percent$大職業別, "-")) #取出-的位置方便之後substr
+increase_over_5percent_MainCareerCategory <-substr(increase_over_5percent$大職業別, 0, index-1 ) #按照剛剛取出的索引值做取文字，即可找出-前的職業種別
+table(increase_over_5percent_MainCareerCategory)
 ```
 
 ## 男女同工不同酬現況分析
@@ -61,36 +63,37 @@ table(Q1_3_answer)
 
 ### 104和107年度的大學畢業薪資資料，哪些行業男生薪資比女生薪資多? (前十名)
 ```{r male}
-Q2_1_104 <- arrange(career_join, `大學-女/男.x`) %>%
+Male_morethan_Female_104 <- arrange(career_join, `大學-女/男.x`) %>%
   head(10) %>%
-  select(1:14)
-knitr::kable(Q2_1_104)
-Q2_1_107 <- arrange(career_join, `大學-女/男.y`) %>%
+  select(1,2,12)
+knitr::kable(Male_morethan_Female_104)
+Male_morethan_Female_107 <- arrange(career_join, `大學-女/男.y`) %>%
   head(10) %>%
-  select(-1,-(3:14),-28)
-knitr::kable(Q2_1_107)
+  select(15, 2, 25)
+knitr::kable(Male_morethan_Female_107)
 ```  
 
 ### 哪些行業女生薪資比男生薪資多? 
 104年時很明顯看出140種職業裡只有一個職業是女性大於男性，足見我們社會還是處於一種性別不平等的環境。不過在104與107年相比，第十名從99.59提升到99.74也是一種性別意識抬頭的可能跡象。
 實際上104年時，還有四個職業是男女一樣薪水的，而到107年時候，女性沒有任何比男性高，但是有八個職業是一樣薪水的。單看薪資上來說，還是有所成長的，但依然不是公平的環境。
 ```{r female}
-Q2_2_104 <- arrange(career_join, desc(`大學-女/男.x`)) %>%
-  select(1:14) %>%
+FeMale_morethan_Male_104 <- arrange(career_join, desc(`大學-女/男.x`)) %>%
+  select(1,2,12) %>%
   head(10)
-knitr::kable(Q2_2_104)
-Q2_2_107 <- arrange(career_join, desc(`大學-女/男.y`)) %>%
-  select(-1, -(3:14), -28) %>%
+knitr::kable(FeMale_morethan_Male_104)
+FeMale_morethan_Male_107 <- arrange(career_join, desc(`大學-女/男.y`)) %>%
+  select(15, 2, 25) %>%
   head(10)
-knitr::kable(Q2_2_107)
+knitr::kable(FeMale_morethan_Male_107)
 ```
 
 ## 研究所薪資差異
 
 以107年度的資料來看，哪個職業別念研究所最划算呢 (研究所學歷薪資與大學學歷薪資增加比例最多)? (前十名)
+140個職業中，有紀錄的有79個且都是研究所比大學高，最低幅度是1.02左右，可見在台灣社會中文憑還是有一定的加分作用。從前十名來看，其他服務這個種別以12.3%的幅度佔據榜首，而專業科學技術服務種別佔據第二，與第一差距不大，總體看來，這三年間有關服務類型的職業成長幅度都高，而其中又以跟資訊以及傳播影音有關的職業提升最大。其他的則是工業、製造業、教育等種別佔去剩下位置。
  
 ```{r grad}
-clean_career107 <- select(career_join, -1,-(3:14),-28)
+clean_career107 <- select(career_join, 2, 24, 26)
 clean_career107$碩士薪資增加比率 <- clean_career107$`研究所-薪資`/clean_career107$`大學-薪資.y` 
 MasterHighCP107 <- clean_career107 %>% arrange(desc(碩士薪資增加比率)) %>% 
   head(10)
@@ -103,20 +106,22 @@ knitr::kable(MasterHighCP107)
 2.專業_科學及技術服務業-專業人員  
 3.金融及保險業-專業人員  
 4.出版、影音製作、傳播及資通訊服務業-專業人員	
-從下面兩個圖表整理出的資訊，基本上與我想的薪水差不多，公務員教育領域本就不算高，且由於讀研究所CP值也低，因此直接排除考慮。而出版影音雖然讀研究所CP值高，但起薪只能算在四者中間值，因此決定割痛。最後可能以金融跟科學技術專業人員為最佳選擇，且又以科學技術專業人員讀研究所的CP值引發的動力最高。
+從下面兩個圖表整理出的資訊，基本上與我想的薪水差不多，公務員教育領域本就不算高，且由於讀研究所CP值也低，因此直接排除考慮。而出版影音雖然讀研究所CP值高，但起薪只能算在四者中間值，因此決定割痛。單純以收入作考量的話，最後可能以金融跟科學技術專業人員為最佳選擇，且又以科學技術專業人員讀研究所的CP值引發的動力最高。
 
 
 ### 有興趣的職業別篩選，呈現薪資
 ```{r like}
-My_choices <- career_join[c(114, 100, 86, 79),c(2,11,13,24,26)] 
-names(My_choices)[2:5] <- c("104大學薪資","104研究所以上薪資","107大學薪資","107研究所以上薪資")
+My_choices <- career_join[c(114, 100, 86, 79),c(2, 24, 26)] 
+names(My_choices)[2:3] <- c("107大學薪資","107研究所以上薪資")
 knitr::kable(My_choices)
 ```
 
 ### 這些職業別研究所薪資與大學薪資差多少呢？
 ```{r likeGrad}
 My_choices$碩士107CP值 <- My_choices$`107研究所以上薪資` / My_choices$`107大學薪資`
-knitr::kable(My_choices)
+My_choices
+My_choices %>% arrange(desc(碩士107CP值)) %>%
+  knitr::kable()
 ```
 
 
